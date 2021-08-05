@@ -100,6 +100,46 @@ def main():
             
             if submit2:
                 st.pyplot(fig)
+                
+                
+        col1, col2 = st.beta_columns(2)
+        with col1:
+            
+            with st.beta_expander("Select Columns for calculate"):
+                df1 = df.drop(columns = new_df)
+                all_column = df1.columns.to_list()
+
+                select_column = st.multiselect("Select Column", all_column)
+                new_df1 = df[select_column]
+                st.dataframe(new_df1)
+        with col2:
+            with st.beta_expander("sample"):
+                sample_Ave = []
+                for col in range(len(new_df1)):
+                    mean = sum(new_df1.loc[col])/len(new_df1)
+                    sample_Ave.append(mean)
+                sample_Ave = np.array(sample_Ave)
+                st.write(sample_Ave)
+            with st.beta_expander("Protein Conc"):  
+                #dilution = st.slider("update dilution")
+                protein_conc= []
+                #update_dilution = []
+                for protein in sample_Ave:
+                    protein_conc.append(round((protein-b)/m ,2))
+
+                #update_dilution.append(protein_conc*dilution)
+                #update_dilution = (protein_conc*dilution)
+                df1 = {"protein_conc":protein_conc}
+                md = pd.DataFrame(df1)
+                st.write(md)
+            with st.beta_expander("dilution"): 
+                dilution = st.slider("update dilution")
+                update_dilution = (md*dilution)
+                
+                st.write(update_dilution)
+            
+           
+                   
             
             
 if __name__ =="__main__":
